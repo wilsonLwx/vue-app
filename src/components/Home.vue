@@ -15,23 +15,23 @@
             <el-aside width="200px">
             <!-- 侧边栏菜单区 -->
                 <el-menu background-color="#333744" text-color="#fff"
-                    active-text-color="#ffd04b">
+                    active-text-color="#409EFF" unique-opened>
                     <!-- 一级菜单 -->
-                    <el-submenu index="1">
+                    <el-submenu :index="item.id + ''" v-for="item in menueList" :key="item.id">
                         <!-- 一级菜单的模板区域 -->
                         <template slot="title">
                             <!-- 图标 -->
-                            <i class="el-icon-location"></i>
+                            <i :class="iconsObj[item.id + '']"></i>
                             <!-- 文本 -->
-                            <span>导航一</span>
+                            <span>{{ item.optionName }}</span>
                         </template>
                         <!-- 二级菜单 -->
-                        <el-menu-item index="1-4-1">
+                        <el-menu-item :index="item.id + '-' + index" v-for="(subitem, index) in item.subOptionNames" :key="item.id + '-' + index">
                             <template slot="title">
                             <!-- 图标 -->
-                            <i class="el-icon-location"></i>
+                            <i class="el-icon-menu"></i>
                             <!-- 文本 -->
-                            <span>导航一</span>
+                            <span>{{ subitem }}</span>
                             </template>
                         </el-menu-item>
                     </el-submenu>
@@ -44,13 +44,51 @@
 </template>
 
 <script>
+    import gql from 'graphql-tag'
+    const userLogin = gql`query initLeftSideOptions{
+        initLeftSideOptions{
+            options{
+            id
+            optionName
+            subOptionNames
+            }
+        }
+    }`
+    
     export default {
+        data () {
+            return {
+                menueList: [], 
+                iconsObj: {
+                    "0": "iconfont icon-users",
+                    "1": "iconfont icon-tijikongjian",
+                    "2": "iconfont icon-shangpingouwudai2",
+                    "3": "iconfont icon-danju-tianchong ",
+                    "4": "iconfont icon-baobiao",
+                }
+            }
+        },
+        created () {
+            this.getMenueList()
+        },
         methods: {
             // 退出
             logout() {
                 // 清空token
                 window.localStorage.clear()
                 this.$router.push('/login')
+            },
+            // 获取左侧菜单
+            async getMenueList () {
+                await this.$apollo.query(
+                    {
+                        query: userLogin
+                    }
+                ).then(
+                    res => {
+                        this.menueList = res.data.initLeftSideOptions.options
+                    }
+                )
             }
         }
     }
@@ -83,5 +121,13 @@
 
 .el-main {
     background-color: #eaedf1;
+}
+
+.el-menu {
+    border-right: none
+}
+
+.iconfont {
+    margin-right: 10px;
 }
 </style>
