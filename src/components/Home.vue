@@ -49,7 +49,7 @@
             // 退出
             logout() {
                 // 清空token
-                window.sessionStorage.clear()
+                window.localStorage.clear()
                 this.$router.push('/login')
             }
         }

@@ -24,7 +24,7 @@ router.beforeEach((to, from, next) => {
   // next() 放行  next('/login') 强制跳转
   if (to.path === '/login') return next() 
   // 获取token
-  const tokenStr = window.sessionStorage.getItem('token')
+  const tokenStr = window.localStorage.getItem('access_token')
   // 如果token不存在 强制跳转登录页
   if (!tokenStr) return next('/login')
   next()
