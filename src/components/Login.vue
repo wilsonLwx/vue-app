@@ -83,8 +83,8 @@ export default {
                         const token = userloginobj.token
                         if (ok){
                             this.$message.success('登录成功！')
-                            // 存储token 到 sessionStorage
-                            window.sessionStorage.setItem("token", token);
+                            // 存储token 到 localStorage
+                            window.localStorage.setItem("access_token", token);
                             // 跳转到home页
                             this.$router.push('/home')
                         } else {
